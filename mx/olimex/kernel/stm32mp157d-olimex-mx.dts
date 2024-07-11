@@ -127,25 +127,83 @@
 		};
 	};
 
-	sd_switch:regulator-sd-switch{
-		compatible = "regulator-gpio";
-		regulator-name = "sd_switch";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <2900000>;
-		regulator-type = "voltage";
+	vdd_sd3v3: regulator_vdd {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd-sd";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		enable-active-high;
 		regulator-always-on;
-		gpios = <&gpiof 14 GPIO_ACTIVE_HIGH>;
-		gpios-states = <0>;
-		states = <1800000 0x1>,
-				<2900000 0x0>;
+		regulator-initial-mode = <0>;
+		//regulator-over-current-protection;
 	};
 
-	vin:vin{
+	hdmi_3v3: regulator_hdmi {
 		compatible = "regulator-fixed";
-		regulator-name = "vin";
+		regulator-name = "vdd-hdmi";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		enable-active-high;
+		regulator-always-on;
+		regulator-initial-mode = <0>;
+		//regulator-over-current-protection;
+	};
+
+	hdmi_1v8: regulator_hdmi1v8 {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd-hdmi1v8";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		enable-active-high;
+		regulator-always-on;
+		regulator-initial-mode = <0>;
+		//regulator-over-current-protection;
+	};
+
+/*
+	hdmi_1v2: regulator_hdmi1v2 {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd-hdmi1v2";
+		regulator-min-microvolt = <1200000>;
+		regulator-max-microvolt = <1200000>;
+		enable-active-high;
+		regulator-always-on;
+		regulator-initial-mode = <0>;
+		//regulator-over-current-protection;
+	};
+*/
+
+	vbus_otg: regulator_otg {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd-otg";
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
+		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
+		enable-active-high;
+		regulator-initial-mode = <0>;
+		//regulator-over-current-protection;
+	};
+
+	vdd: vdd {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		enable-active-high;
 		regulator-always-on;
+		regulator-initial-mode = <0>;
+		//regulator-over-current-protection;
+	};
+
+	vdd_usb: vdd-usb {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd-usb";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		enable-active-high;
+		regulator-always-on;
+		regulator-initial-mode = <0>;
+		//regulator-over-current-protection;
 	};
 
 	/* USER CODE END root */
@@ -658,140 +716,20 @@
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
 
-	pmic:stpmic@33{
-		compatible = "st,stpmic1";
-		reg = <0x33>;
-		interrupts-extended = <&exti 55 IRQ_TYPE_EDGE_FALLING>;
+	axp209: pmic@34 {
+		compatible = "x-powers,axp209";
+		reg = <0x34>;
+		interrupt-parent = <&gpioa>;
+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+
 		interrupt-controller;
-		#interrupt-cells = <2>;
-		status = "okay";
+		#interrupt-cells = <1>;
+	};
 
-		regulators{
-			compatible = "st,stpmic1-regulators";
-			buck1-supply = <&vin>;
-			buck2-supply = <&vin>;
-			buck3-supply = <&vin>;
-			buck4-supply = <&vin>;
-			ldo1-supply = <&v3v3>;
-			ldo2-supply = <&v3v3>;
-			ldo3-supply = <&vdd_ddr>;
-			ldo4-supply = <&vin>;
-			ldo5-supply = <&v3v3>;
-			ldo6-supply = <&v3v3>;
-			vref_ddr-supply = <&vin>;
-			boost-supply = <&vin>;
-			pwr_sw1-supply = <&bst_out>;
-			pwr_sw2-supply = <&bst_out>;
-
-			vddcore:buck1{
-				regulator-name = "vddcore";
-				regulator-min-microvolt = <1200000>;
-				regulator-max-microvolt = <1350000>;
-				regulator-always-on;
-				regulator-initial-mode = <0>;
-				regulator-over-current-protection;
-			};
-
-			vdd_ddr:buck2{
-				regulator-name = "vdd_ddr";
-				regulator-min-microvolt = <1350000>;
-				regulator-max-microvolt = <1350000>;
-				regulator-always-on;
-				regulator-initial-mode = <0>;
-				regulator-over-current-protection;
-			};
-
-			vdd:buck3{
-				regulator-name = "vdd";
-				regulator-min-microvolt = <3300000>;
-				regulator-max-microvolt = <3300000>;
-				regulator-always-on;
-				st,mask-reset;
-				regulator-initial-mode = <0>;
-				regulator-over-current-protection;
-			};
-
-			v3v3:buck4{
-				regulator-name = "v3v3";
-				regulator-min-microvolt = <3300000>;
-				regulator-max-microvolt = <3300000>;
-				regulator-always-on;
-				regulator-over-current-protection;
-				regulator-initial-mode = <0>;
-			};
-
-			vdda:ldo1{
-				regulator-name = "vdda";
-				regulator-min-microvolt = <2900000>;
-				regulator-max-microvolt = <2900000>;
-				interrupts = <IT_CURLIM_LDO1 0>;
-			};
-
-			v2v8:ldo2{
-				regulator-name = "v2v8";
-				regulator-min-microvolt = <2800000>;
-				regulator-max-microvolt = <2800000>;
-				interrupts = <IT_CURLIM_LDO2 0>;
-			};
-
-			vtt_ddr:ldo3{
-				regulator-name = "vtt_ddr";
-				regulator-min-microvolt = <500000>;
-				regulator-max-microvolt = <750000>;
-				regulator-always-on;
-				regulator-over-current-protection;
-			};
-
-			vdd_usb:ldo4{
-				regulator-name = "vdd_usb";
-				interrupts = <IT_CURLIM_LDO4 0>;
-			};
-
-			vdd_sd:ldo5{
-				regulator-name = "vdd_sd";
-				regulator-min-microvolt = <2900000>;
-				regulator-max-microvolt = <2900000>;
-				interrupts = <IT_CURLIM_LDO5 0>;
-				regulator-boot-on;
-			};
-
-			v1v8:ldo6{
-				regulator-name = "v1v8";
-				regulator-min-microvolt = <1800000>;
-				regulator-max-microvolt = <1800000>;
-				interrupts = <IT_CURLIM_LDO6 0>;
-				regulator-enable-ramp-delay = <300000>;
-			};
-
-			vref_ddr:vref-ddr{
-				regulator-name = "vref_ddr";
-				regulator-always-on;
-			};
-
-			bst_out:boost{
-				regulator-name = "bst_out";
-				interrupts = <IT_OCP_BOOST 0>;
-			};
-
-			vbus_otg:pwr-sw1{
-				regulator-name = "vbus_otg";
-				interrupts = <IT_OCP_OTG 0>;
-			};
-
-			vbus_sw:pwr-sw2{
-				regulator-name = "vbus_sw";
-				interrupts = <IT_OCP_SWOUT 0>;
-				regulator-active-discharge = <1>;
-			};
-		};
-
-		onkey{
-			compatible = "st,stpmic1-onkey";
-			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 0>;
-			interrupt-names = "onkey-falling", "onkey-rising";
-			power-off-time-sec = <10>;
-			status = "okay";
-		};
+	eeprom: eeprom@50 {
+		compatible = "atmel,24c16";
+		reg = <0x50>;
+		pagesize = <16>;
 	};
 	/* USER CODE END i2c4 */
 };
@@ -857,6 +795,7 @@
 	/* USER CODE END pwr_regulators */
 };
 
+
 &qspi{
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&quadspi_pins_mx>;
@@ -868,18 +807,9 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 
-	flash0:flash@0{
-		compatible = "jedec,spi-nor";
+	flash0: w25q128@0 {
+		compatible = "jedec,spi-nor", "winbond,w25q128";
 		reg = <0>;
-		spi-rx-bus-width = <4>;
-		spi-max-frequency = <108000000>;
-		#address-cells = <1>;
-		#size-cells = <1>;
-	};
-
-	flash1:flash@1{
-		compatible = "jedec,spi-nor";
-		reg = <1>;
 		spi-rx-bus-width = <4>;
 		spi-max-frequency = <108000000>;
 		#address-cells = <1>;
@@ -907,21 +837,13 @@
 	pinctrl-0 = <&sdmmc1_pins_mx>;
 	pinctrl-1 = <&sdmmc1_opendrain_pins_mx>;
 	pinctrl-2 = <&sdmmc1_sleep_pins_mx>;
-	status = "okay";
-
 	/* USER CODE BEGIN sdmmc1 */
-	cd-gpios = <&gpiog 1 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-	disable-wp;
-	st,sig-dir;
+	broken-cd;
 	st,neg-edge;
-	st,use-ckin;
 	bus-width = <4>;
-	vmmc-supply = <&vdd_sd>;
-	vqmmc-supply = <&sd_switch>;
-	sd-uhs-sdr12;
-	sd-uhs-sdr25;
-	sd-uhs-sdr50;
-	sd-uhs-ddr50;
+	vmmc-supply = <&vdd_sd3v3>;
+	vqmmc-supply = <&vdd_sd3v3>;
+	status = "okay";
 	/* USER CODE END sdmmc1 */
 };
 
@@ -934,13 +856,11 @@
 
 	/* USER CODE BEGIN sdmmc2 */
 	non-removable;
-	no-sd;
-	no-sdio;
 	st,neg-edge;
 	bus-width = <8>;
-	vmmc-supply = <&v3v3>;
-	vqmmc-supply = <&vdd>;
-	mmc-ddr-3_3v;
+	vmmc-supply = <&vdd_sd3v3>;
+	vqmmc-supply = <&vdd_sd3v3>;
+	status = "okay";
 	/* USER CODE END sdmmc2 */
 };
 
@@ -949,6 +869,22 @@
 
 	/* USER CODE BEGIN tamp */
 	/* USER CODE END tamp */
+};
+
+&timers4 {
+	status = "okay";
+
+	/delete-property/dmas;
+	/delete-property/dma-names;
+	pwm4: pwm {
+		pinctrl-0 = <&pwm4_pins_b>;
+		pinctrl-names = "default";
+		status = "okay";
+	};
+
+	timer@1 {
+		status = "okay";
+	};
 };
 
 &timers6{
@@ -1058,6 +994,62 @@
 };
 
 /* USER CODE BEGIN addons */
+
+#include "axp209.dtsi"
+
+&ac_power_supply {
+	status = "okay";
+};
+
+&battery_power_supply {
+	status = "okay";
+};
+
+
+&reg_dcdc2 {
+	regulator-name = "vddcore";
+	regulator-min-microvolt = <1200000>;
+	regulator-max-microvolt = <1350000>;
+	regulator-always-on;
+/*
+	regulator-initial-mode = <0>;
+	regulator-over-current-protection;
+*/
+};
+
+&reg_dcdc3 {
+	regulator-always-on;
+	regulator-min-microvolt = <1200000>; //vdd-hdmi
+	regulator-max-microvolt = <1200000>;
+	regulator-name = "vcc-hdmi";
+};
+
+&reg_ldo1 {
+	regulator-name = "vdd-rtc";
+};
+
+&reg_ldo2 {
+	regulator-always-on;
+	regulator-min-microvolt = <3300000>;
+	regulator-max-microvolt = <3300000>;
+	regulator-name = "avcc"; //avcc vcc-flash
+};
+
+/*
+&reg_ldo3 {
+	regulator-always-on;
+	regulator-min-microvolt = <1200000>;
+	regulator-max-microvolt = <1200000>;
+	regulator-name = "vcc-hdmi"; //avcc
+};
+*/
+
+&reg_ldo4 {
+	regulator-always-on;
+	regulator-min-microvolt = <2800000>;
+	regulator-max-microvolt = <2800000>;
+	regulator-name = "28v1"; //avcc
+};
 
 &arm_wdt{
 	timeout-sec = <32>;
