@@ -1,0 +1,11 @@
+--- a/create_sdcard_from_flashlayout.sh
++++ b/create_sdcard_from_flashlayout.sh
+@@ -33,7 +33,7 @@ declare -A FLASHLAYOUT_data
+ SDCARD_TOKEN=mmc0
+ 
+ # Size of 5GB
+-DEFAULT_RAW_SIZE=${SDCARD_SIZE:-5120}
++DEFAULT_RAW_SIZE=${SDCARD_SIZE:-1024}
+ 
+ # size of 768MB
+ DEFAULT_ROOTFS_PARTITION_SIZE=${ROOTFS_SIZE:-752640}
