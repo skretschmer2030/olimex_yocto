@@ -88,30 +88,6 @@
 		regulator-max-microvolt = <3300000>;
 		regulator-always-on;
 	};
-
-	vdd_usb: vdd_usb {
-		compatible = "regulator-fixed";
-		regulator-name = "vdd_usb";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
-	};
-
-	vdd_sd: vdd_sd {
-		compatible = "regulator-fixed";
-		regulator-name = "vdd_sd";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
-	};
-
-	v3v3: v3v3 {
-		compatible = "regulator-fixed";
-		regulator-name = "v3v3";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
-	};	
 }; 
 
 &pinctrl {
@@ -392,7 +368,7 @@
 	st,neg-edge;
 	st,use-ckin;
 	bus-width = <4>;
-	vmmc-supply = <&vdd_sd>;
+	vmmc-supply = <&vdd>;
 	sd-uhs-sdr12;
 	sd-uhs-sdr25;
 	sd-uhs-sdr50;
@@ -411,7 +387,7 @@
 	no-sdio;
 	st,neg-edge;
 	bus-width = <8>;
-	vmmc-supply = <&v3v3>;
+	vmmc-supply = <&vdd>;
 	vqmmc-supply = <&vdd>;
 	mmc-ddr-3_3v;
 	/* USER CODE END sdmmc2 */
@@ -474,10 +450,11 @@
 	cpu-supply = <&vddcore>;
 };
 
+/*
 &pwr_regulators{
 	vdd-supply = <&vdd>;
 	vdd_3v3_usbfs-supply = <&vdd_usb>;
-};
+};*/
 
 &rng1{
 	status = "okay";
