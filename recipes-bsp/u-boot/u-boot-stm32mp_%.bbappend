@@ -60,3 +60,7 @@ do_install:append() {
     # Install uboot.env
     install -m 640 ${WORKDIR}/uboot.env ${D}/boot/uboot.env
 }
+
+# uboot-olimex-env has olimex env file (keep standard u-boot-env)
+FILES:${PN}-olimex-env = "/boot/uboot.env"
+PACKAGES =+ "${PN}-olimex-env"
