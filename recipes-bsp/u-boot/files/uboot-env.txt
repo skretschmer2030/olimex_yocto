@@ -1,0 +1,19 @@
+arch=arm
+baudrate=115200
+board=olimex
+board_name=olimex-stm32mp1
+boot_device=mmc
+boot_instance=0
+bootdelay=0
+cpu=armv7
+fdt_addr_r=0xc4000000
+fdtcontroladdr=ddf9e000
+kernel_addr_r=0xc2000000
+soc=stm32mp
+part_boot=8
+part_root=10
+part_var_rw=11
+set_boot_type=if test ${boot_instance} -eq 0; then setenv boot_type SD; else setenv boot_type MMC; fi
+load_kernel=ext4load ${boot_device} ${boot_instance}:${part_boot} ${kernel_addr_r} /fitImage;
+bootcmd=run load_kernel; run set_bootargs; bootm ${kernel_addr_r}
+set_bootargs=run set_boot_type; setenv bootargs ${can_recovery} root=${part_root} var_rw=${part_var_rw} boottype=${boot_type} rootwait rw console=ttySTM0,115200 quiet

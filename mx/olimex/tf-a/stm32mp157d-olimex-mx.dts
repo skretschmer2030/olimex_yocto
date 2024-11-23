@@ -168,11 +168,12 @@
 	/* USER CODE END i2c4 */
 };
 
-&iwdg1{
+
+&iwdg2{
 	status = "okay";
 
 	/* USER CODE BEGIN iwdg1 */
-	timeout-sec = <32>;
+	timeout-sec = <300>;
 	/* USER CODE END iwdg1 */
 };
 

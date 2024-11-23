@@ -244,9 +244,12 @@
 	status = "okay";
 };
 
-&iwdg2 {
-	timeout-sec = <32>;
+&iwdg2{
 	status = "okay";
+
+	/* USER CODE BEGIN iwdg1 */
+	timeout-sec = <300>;
+	/* USER CODE END iwdg1 */
 };
 
 &m4_rproc {

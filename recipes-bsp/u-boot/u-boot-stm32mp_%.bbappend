@@ -49,3 +49,14 @@ python() {
     if "stm32mpcommonmx" in machine_overrides:
         d.appendVarFlag('do_configure', 'prefuncs', ' autogenerate_makefile_for_external_dt_cubemx')
 }
+
+# comlet
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
+
+SRC_URI:append = " file://uboot.env"
+SRC_URI:append = " file://stm32mp15_olimex_defconfig;subdir=git/configs"
+
+do_install:append() {
+    # Install uboot.env
+    install -m 640 ${WORKDIR}/uboot.env ${D}/boot/uboot.env
+}

@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# Function for parsing command line options with "=" in them
+# get_opt("init=/sbin/init") will return "/sbin/init"
+
+get_opt() {
+	echo "$@" | cut -d "=" -f 2
+}
+
+mount_rootfs_readwrite() {
+	mkdir /newroot
+	mount -t ext4 -o ro $root /newroot
+	cd /newroot
+    mount --move /dev/ dev/
+    mount --move /proc/ proc/
+    mount --move /sys/ sys/
+    mount --move /run/ run/
+	exec switch_root -c /dev/console . "/sbin/init"
+}
+
+PATH=$PATH:/sbin:/usr/sbin
+
+/bin/mount -t devtmpfs devtmpfs /dev
+#/bin/mount -o remount,rw /
+/bin/mkdir -p /dev/pts
+/bin/mkdir -p /dev/shm
+/bin/mount -n -t proc proc /proc
+/bin/mount -n -t sysfs sysfs /sys
+/bin/mount -n -t tmpfs tmpfs /run
+
+exec 0</dev/console
+exec 1>/dev/console
+exec 2>/dev/console
+
+root=/dev/mmcblk0p10
+#Process command line options
+for i in $(cat /proc/cmdline); do
+	case $i in
+		root\=*)
+			root=$(get_opt $i)
+			;;
+		init\=*)
+			init=$(get_opt $i)
+			;;
+		verity\=*)
+			verity=$(get_opt $i)
+			;;
+		global_part\=*)
+			global_part=$(get_opt $i)
+			;;
+	esac
+done
+
+mount_rootfs_readwrite
+
+echo "Switching failed, dropping to console"
+
+exec /sbin/getty -L  console 0 vt100 # GENERIC_SERIAL
