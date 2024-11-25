@@ -1,3 +1,5 @@
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
+
 # Configure recipe for CubeMX
 inherit cubemx-stm32mp
 
@@ -36,3 +38,7 @@ python() {
     if "stm32mpcommonmx" in machine_overrides:
         d.appendVarFlag('do_configure', 'prefuncs', ' autogenerate_makefile_for_external_dt_cubemx')
 }
+
+# comlet
+SRC_URI:append = " file://fragment-01-add-early-debug.config;subdir=fragments/6.1"
+KERNEL_CONFIG_FRAGMENTS:append = " ${WORKDIR}/fragments/6.1/fragment-01-add-early-debug.config"

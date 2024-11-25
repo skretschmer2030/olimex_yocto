@@ -16,4 +16,4 @@ part_var_rw=11
 set_boot_type=if test ${boot_instance} -eq 0; then setenv boot_type SD; else setenv boot_type MMC; fi
 load_kernel=ext4load ${boot_device} ${boot_instance}:${part_boot} ${kernel_addr_r} /fitImage;
 bootcmd=run load_kernel; run set_bootargs; bootm ${kernel_addr_r}
-set_bootargs=run set_boot_type; setenv bootargs ${can_recovery} root=${part_root} var_rw=${part_var_rw} boottype=${boot_type} rootwait rw console=ttySTM0,115200 quiet
+set_bootargs=run set_boot_type; setenv bootargs ${can_recovery} root=${part_root} var_rw=${part_var_rw} boottype=${boot_type} rootwait rw console=ttySTM0,115200 earlycon
