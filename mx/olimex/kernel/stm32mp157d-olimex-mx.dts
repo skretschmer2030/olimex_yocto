@@ -9,6 +9,7 @@
 #include "stm32mp15xd.dtsi"
 #include "stm32mp15-pinctrl.dtsi"
 #include "stm32mp15xxaa-pinctrl.dtsi"
+#include "stm32mp157a-ed1-scmi.dtsi"
 
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/mfd/st,stpmic1.h>
@@ -27,7 +28,7 @@
 
 	memory@c0000000 {
 		device_type = "memory";
-		reg = <0xC0000000 0x40000000>;
+		reg = <0xc0000000 0x40000000>;
 	};
 
 	reserved-memory {
@@ -61,6 +62,12 @@
 			no-map;
 		};
 
+		mcu_rsc_table:mcu-rsc-table@10048000{
+			compatible = "shared-dma-pool";
+			reg = <0x10048000 0x8000>;
+			no-map;
+		};
+
 		mcuram:mcuram@30000000 {
 			compatible = "shared-dma-pool";
 			reg = <0x30000000 0x40000>;
@@ -73,8 +80,13 @@
 			no-map;
 		};
 
-		gpu_reserved:gpu@e8000000{
-			reg = <0xe8000000 0x8000000>;
+		gpu_reserved:gpu@d4000000{
+			reg = <0xd4000000 0x4000000>;
+			no-map;
+		};
+
+		optee@fe000000 {
+			reg = <0xfe000000 0x2000000>;
 			no-map;
 		};
 	};
@@ -216,6 +228,23 @@
 	};*/
 };
 
+&dmamux1{
+	status = "okay";
+
+	dma-masters = <&dma1 &dma2>;
+	dma-channels = <16>;
+
+	/* USER CODE BEGIN dmamux1 */
+	/* USER CODE END dmamux1 */
+};
+
+&dts{
+	status = "okay";
+
+	/* USER CODE BEGIN dts */
+	/* USER CODE END dts */
+};
+
 &ethernet0 {
 	status = "okay";
 	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
@@ -292,9 +321,9 @@
 	status = "okay";
 };
 
-&iwdg2 {
+&arm_wdt {
 	timeout-sec = <32>;
-	status = "disabled";
+	status = "okay";
 };
 
 &m4_rproc {
@@ -304,7 +333,7 @@
 	mbox-names = "vq0", "vq1", "shutdown";
 	interrupt-parent = <&exti>;
 	interrupts = <68 1>;
-	status = "okay";
+	status = "disabled";
 };
 
 &pwr_regulators {
@@ -410,7 +439,7 @@
 	reg = <0x58003000 0x1000>, <0x70000000 0x4000000>;
 	#address-cells = <1>;
 	#size-cells = <0>;
-	status = "okay";
+	status = "disabled";
 
 	flash0: w25q128@0 {
 		compatible = "jedec,spi-nor", "winbond,w25q128";

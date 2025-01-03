@@ -9,12 +9,14 @@
 #include "stm32mp15xd.dtsi"
 #include "stm32mp15-pinctrl.dtsi"
 #include "stm32mp15xxaa-pinctrl.dtsi"
-#include <dt-bindings/gpio/gpio.h>
-#include <dt-bindings/mfd/st,stpmic1.h>
+#include "stm32mp15-scmi.dtsi"
+#include "stm32mp157a-ev1-scmi.dtsi"
+#include <dt-bindings/rtc/rtc-stm32.h>
+
 
 / {
 	model = "STM32MP1 OLinuXino-LIME";
-	compatible = "olimex,stm32mp1xx-olinuxino-lime", "st,stm32mp157";
+	compatible = "olimex,stm32mp157d-olinuxino-lime", "st,stm32mp157";
 
 	chosen {
 		stdout-path = "serial0:115200n8";
@@ -244,12 +246,10 @@
 	status = "okay";
 };
 
-&iwdg2{
-	status = "okay";
 
-	/* USER CODE BEGIN iwdg1 */
-	timeout-sec = <300>;
-	/* USER CODE END iwdg1 */
+&arm_wdt {
+	timeout-sec = <32>;
+	status = "okay";
 };
 
 &m4_rproc {

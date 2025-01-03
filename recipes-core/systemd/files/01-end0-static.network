@@ -1,0 +1,9 @@
+[Match]
+Type=ether
+Name=end0
+
+[Network]
+Address=fd53:7cb8:383:9::cb/64
+Address=172.16.250.240/16
+DHCP=no
+

@@ -16,7 +16,7 @@
 
 #include "stm32mp157.dtsi"
 #include "stm32mp15xd.dtsi"
-#include "stm32mp15xxad-pinctrl.dtsi"
+#include "stm32mp15xxaa-pinctrl.dtsi"
 #include "stm32mp15-ddr.dtsi"
 
 /* USER CODE BEGIN includes */
@@ -168,14 +168,11 @@
 	/* USER CODE END i2c4 */
 };
 
-
-&iwdg2{
+/*
+&iwdg1 {
+	timeout-sec = <32>;
 	status = "okay";
-
-	/* USER CODE BEGIN iwdg1 */
-	timeout-sec = <300>;
-	/* USER CODE END iwdg1 */
-};
+};*/
 
 &rcc{
 	status = "okay";
